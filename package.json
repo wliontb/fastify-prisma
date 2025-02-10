@@ -1,0 +1,22 @@
+{
+  "name": "Fastify2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^9.0.4",
+    "@prisma/client": "^6.3.1",
+    "fastify": "^5.2.1",
+    "fastify-zod": "^1.4.0",
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.24.1"
+  }
+}
