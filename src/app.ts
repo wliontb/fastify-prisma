@@ -48,11 +48,11 @@ async function main() {
     }
 
     server.register(userRoutes, { prefix: 'api/users' })
-    server.register(productRoutes, {prefix: 'api/products'})
+    server.register(productRoutes, { prefix: 'api/products' })
 
     try {
         await server.listen({ port: 8080, host: '0.0.0.0' });
-        console.log(`Server ready at http://localhost:3000`)
+        console.log(`Server ready at http://localhost:8080`)
     } catch (err) {
         console.error(err);
         process.exit(1);
