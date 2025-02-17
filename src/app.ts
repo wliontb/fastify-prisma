@@ -4,8 +4,19 @@ import userRoutes from './modules/user/user.route';
 import { userSchemas } from './modules/user/user.schema';
 import { productSchemas } from './modules/product/product.schema';
 import productRoutes from './modules/product/product.route';
+import Ajv from 'ajv';
+import ajvErrors from 'ajv-errors';
+import path from 'path';
+import fastifyStatic from '@fastify/static';
 
-export const server = Fastify();
+export const server = Fastify({
+    ajv: {
+        plugins: [ajvErrors],
+        customOptions: {
+            allErrors: true
+        }
+    }
+});
 
 declare module "fastify" {
     export interface FastifyInstance {
@@ -49,6 +60,11 @@ async function main() {
 
     server.register(userRoutes, { prefix: 'api/users' })
     server.register(productRoutes, { prefix: 'api/products' })
+
+    server.register(fastifyStatic, {
+        root: path.join(__dirname, '../public'),
+        prefix: '/'
+    })
 
     try {
         await server.listen({ port: 8080, host: '0.0.0.0' });

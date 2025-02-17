@@ -1,33 +1,64 @@
-import { z } from "zod";
-import {buildJsonSchemas} from 'fastify-zod';
-
-const productInput = {
-    title: z.string(),
-    price: z.number(),
-    content: z.string().optional()
+export const createProductSchema = {
+    $id: 'createProductSchema',
+    type: 'object',
+    required: ['title', 'price'],
+    properties: {
+        title: { type: 'string' },
+        price: { type: 'number' },
+        content: { type: 'string' },
+    }
 }
 
-const productGenerated = {
-    id: z.number(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+export const productResponseSchema = {
+    $id: 'productResponseSchema',
+    type: 'object',
+    properties: {
+        id: { type: 'number' },
+        title: { type: 'string' },
+        price: { type: 'number' },
+        content: { type: 'string', nullable: true },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' }
+    }
 }
 
-const createProductSchema = z.object({
-    ...productInput
-})
-const productResponseSchema = z.object({
-    ...productInput,
-    ...productGenerated
-})
+export const productsResponseSchema = {
+    $id: 'productsResponseSchema',
+    type: 'array',
+    items: productResponseSchema
+}
 
-const productsResponseSchema = z.array(productResponseSchema)
+// Schema for getting a single product (same as productResponseSchema)
+export const getProductSchema = productResponseSchema;
 
-export type CreateProductInput = z.infer<typeof createProductSchema>;
-export const {schemas: productSchemas, $ref} = buildJsonSchemas({
-    createProductSchema,
-    productResponseSchema,
-    productsResponseSchema
-}, {
-    $id: 'productSchema'
-})
+// Schema for updating a product (making title, price, content optional)
+export const updateProductSchema = {
+    $id: 'updateProductSchema',
+    type: 'object',
+    properties: {
+        title: { type: 'string' },
+        price: { type: 'number' },
+        content: { type: 'string' },
+    }
+}
+
+export interface CreateProductInput {
+    title: string;
+    price: number;
+    content?: string; // Optional content
+}
+
+// Define the TypeScript interface for UpdateProductInput
+export interface UpdateProductInput {
+    title?: string;     // Optional title
+    price?: number;     // Optional price
+    content?: string;   // Optional content
+}
+
+export const productSchemas = [
+    createProductSchema, 
+    productResponseSchema, 
+    productsResponseSchema, 
+    // getProductSchema, 
+    updateProductSchema
+];

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="./css/output.css">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="font-bold text-xl">Fastify Prisma Shop</a>
+            <div id="navbar-links">
+                <!-- Navbar links will be updated by JavaScript -->
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-16 p-8 bg-white shadow-md rounded-md max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">Edit Product</h1>
+        <form id="edit-product-form" class="space-y-4">
+            <input type="hidden" id="product-id" name="id">
+            <div>
+                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                <input type="text" id="title" name="title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Product Title">
+            </div>
+            <div>
+                <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Price</label>
+                <input type="number" id="price" name="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Product Price">
+            </div>
+            <div>
+                <label for="content" class="block text-gray-700 text-sm font-bold mb-2">Content (Optional)</label>
+                <textarea id="content" name="content" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Product Content"></textarea>
+            </div>
+            <div class="flex items-center justify-center space-x-4">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Update Product
+                </button>
+                <a href="#" id="cancel-edit-button" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+</html>
