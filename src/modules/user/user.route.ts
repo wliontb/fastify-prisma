@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { getUserHandler, loginHandler, registerUserHandler } from "./user.controller";
-import { $ref } from "./user_zod.schema";
+// import { $ref } from "./user_zod.schema";
 import { createUserResponseSchema, createUserSchema, loginResponseSchema, loginSchema } from "./user.schema";
 
 async function userRoutes(server: FastifyInstance){

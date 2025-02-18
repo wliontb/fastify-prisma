@@ -44,4 +44,15 @@ export const loginResponseSchema = {
     }
 }
 
+export interface LoginInput {
+    email: string;
+    password: string;
+}
+
+export interface CreateUserInput {
+    email: string;
+    name: string;
+    password: string;
+}
+
 export const userSchemas = [createUserSchema, createUserResponseSchema, loginSchema, loginResponseSchema];

@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createUser, findUserByEmail, findUsers } from "./user.service";
-import { CreateUserInput, LoginInput } from "./user_zod.schema";
+// import { CreateUserInput, LoginInput } from "./user_zod.schema";
 import { verifyPassword } from "../../utils/hash";
 import { server } from "../../app";
+import { CreateUserInput, LoginInput } from "./user.schema";
 
 export async function registerUserHandler(
     request: FastifyRequest<{
@@ -26,8 +27,7 @@ export async function registerUserHandler(
 export async function loginHandler(request: FastifyRequest<{
     Body: LoginInput;
 }>, reply: FastifyReply) {
-    const body = request.body
-    console.log(body)
+    const body = request.body;
     //find a user by email
     const user = await findUserByEmail(body.email);
 

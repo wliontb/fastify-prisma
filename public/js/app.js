@@ -1,27 +1,29 @@
 $(document).ready(function () {
+    const noticeLogginText = 'Bạn phải đăng nhập để xóa sản phẩm.';
+    const noticeRemoveText = 'Bạn có chắc muốn xóa sản phẩm này?';
     const $navbarLinksContainer = $('#navbar-links'); // jQuery selector for navbar links container
 
     const checkLoginStatusAndUpdateNavbar = () => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
-            // If logged in, update navbar links using jQuery's .html()
+            // If logged in, update navbar links
             $navbarLinksContainer.html(`
-                <a href="/product-form.html" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mr-4">Create Product</a>
-                <button id="logout-button" class="px-4 py-2 text-red-600 hover:text-red-800">Logout</button>
+                <a href="/product-form.html" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 mr-4">Thêm sản phẩm</a>
+                <button id="logout-button" class="px-4 py-2 text-red-600 hover:text-red-800">Đăng xuất</button>
             `);
 
-            // Add event listener for Logout button using jQuery's .on('click', ...)
+            // Add event listener for Logout button
             $('#logout-button').on('click', function () {
                 localStorage.removeItem('accessToken');
-                alert('Logged out.');
+                alert('Đã đăng xuất.');
                 checkLoginStatusAndUpdateNavbar(); // Update navbar after logout
-                window.location.href = '/index.html'; // Could reload page or just update navbar
+                window.location.href = '/index.html';
             });
         } else {
-            // If not logged in, display default Login/Register links using jQuery's .html()
+            // If not logged in
             $navbarLinksContainer.html(`
-                <a href="/login.html" class="px-4 py-2 text-blue-600 hover:text-blue-800">Login</a>
-                <a href="/register.html" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Register</a>
+                <a href="/login.html" class="px-4 py-2 text-blue-600 hover:text-blue-800">Đăng nhập</a>
+                <a href="/register.html" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">Đăng ký</a>
             `);
         }
     };
@@ -44,25 +46,25 @@ $(document).ready(function () {
                         <p class="text-gray-700">${product.content ? product.content.substring(0, 50) + '...' : 'No content'}</p>
                         <p class="text-lg font-semibold mt-2">$${product.price}</p>
                         <div class="mt-4 flex space-x-2">
-                            <a href="/product-detail.html?id=${product.id}" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 text-sm">View Detail</a>
-                            <a href="/product-edit.html?id=${product.id}" class="inline-block px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-700 text-sm">Edit</a>
-                            <button class="delete-product-btn inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-sm" data-product-id="${product.id}">Delete</button>
+                            <a href="/product-detail.html?id=${product.id}" class="inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-700 text-sm">Chi tiết</a>
+                            <a href="/product-edit.html?id=${product.id}" class="inline-block px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-700 text-sm">Sửa</a>
+                            <button class="delete-product-btn inline-block px-3 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-sm" data-product-id="${product.id}">Xóa</button>
                         </div>
                     `);
                     $productsContainer.append($productCard);
                 });
 
-                // Event delegation for delete buttons (since they are dynamically added)
+                // Event delegation for delete buttons
                 $productsContainer.on('click', '.delete-product-btn', async function () {
                     const productId = $(this).data('product-id');
                     const accessToken = localStorage.getItem('accessToken');
 
                     if (!accessToken) {
-                        alert('You must be logged in to delete products.');
+                        alert(noticeLogginText);
                         return;
                     }
 
-                    if (confirm('Are you sure you want to delete this product?')) {
+                    if (confirm(noticeRemoveText)) {
                         try {
                             const response = await fetch(`/api/products/${productId}`, {
                                 method: 'DELETE',
@@ -76,19 +78,19 @@ $(document).ready(function () {
                                 fetchProducts(); // Reload product list after deletion
                             } else {
                                 const errorData = await response.json();
-                                alert(`Failed to delete product: ${errorData.message || 'Something went wrong'}`);
+                                alert(`Xóa sản phẩm thất bại: ${errorData.message || 'Có gì đó không đúng'}`);
                             }
                         } catch (error) {
-                            console.error('Delete product error:', error);
-                            alert('Failed to delete product. Please try again.');
+                            console.error('Xóa sản phẩm thất bại:', error);
+                            alert('Xóa sản phẩm thất bại. Vui lòng thử lại');
                         }
                     }
                 });
 
 
             } catch (error) {
-                console.error('Error fetching products:', error);
-                $productsContainer.html('<p class="text-red-500">Failed to load products.</p>');
+                console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
+                $productsContainer.html('<p class="text-red-500">Lấy dữ liệu sản phẩm thất bại.</p>');
             }
         };
 
@@ -105,7 +107,7 @@ $(document).ready(function () {
                 const response = await fetch(`/api/products/${productId}`);
                 if (!response.ok) {
                     if (response.status === 404) {
-                        $productDetailContainer.html('<p class="text-red-500">Product not found.</p>');
+                        $productDetailContainer.html('<p class="text-red-500">Không tìm thấy sản phẩm.</p>');
                     } else {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -115,21 +117,21 @@ $(document).ready(function () {
 
                 $('#product-detail-container').html(`
                     <h2 class="text-2xl font-bold mb-4">${product.title}</h2>
-                    <p class="text-gray-700 mb-4">${product.content || 'No content'}</p>
-                    <p class="text-lg font-semibold">Price: $${product.price}</p>
-                    <p class="text-sm text-gray-500 mt-2">Created At: ${new Date(product.createdAt).toLocaleString()}</p>
-                    <p class="text-sm text-gray-500">Updated At: ${new Date(product.updatedAt).toLocaleString()}</p>
+                    <p class="text-gray-700 mb-4">${product.content || 'Không có mô tả'}</p>
+                    <p class="text-lg font-semibold">Giá: $${product.price}</p>
+                    <p class="text-sm text-gray-500 mt-2">Ngày tạo: ${new Date(product.createdAt).toLocaleString()}</p>
+                    <p class="text-sm text-gray-500">Ngày sửa: ${new Date(product.updatedAt).toLocaleString()}</p>
                 `);
 
                 $('#edit-product-button').attr('href', `/product-edit.html?id=${product.id}`); // Set edit button link
                 $('#delete-product-button').on('click', async function() { // Attach delete event to delete button on detail page
                     const accessToken = localStorage.getItem('accessToken');
                     if (!accessToken) {
-                        alert('You must be logged in to delete products.');
+                        alert(noticeLogginText);
                         return;
                     }
 
-                    if (confirm('Are you sure you want to delete this product?')) {
+                    if (confirm(noticeRemoveText)) {
                         try {
                             const deleteResponse = await fetch(`/api/products/${productId}`, {
                                 method: 'DELETE',
@@ -139,22 +141,22 @@ $(document).ready(function () {
                             });
 
                             if (deleteResponse.status === 204) {
-                                alert('Product deleted successfully.');
+                                alert('Xóa sản phẩm thành công.');
                                 window.location.href = '/index.html'; // Redirect to product list after deletion
                             } else {
                                 const errorData = await deleteResponse.json();
-                                alert(`Failed to delete product: ${errorData.message || 'Something went wrong'}`);
+                                alert(`Xóa sản phẩm thất bại: ${errorData.message || 'Có gì đó không đúng'}`);
                             }
                         } catch (error) {
-                            console.error('Delete product error:', error);
-                            alert('Failed to delete product. Please try again.');
+                            console.error('Lỗi xóa sản phẩm:', error);
+                            alert('Xóa sản phẩm thất bại. Vui lòng thử lại');
                         }
                     }
                 });
 
             } catch (error) {
-                console.error('Error fetching product detail:', error);
-                $productDetailContainer.html('<p class="text-red-500">Failed to load product details.</p>');
+                console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
+                $productDetailContainer.html('<p class="text-red-500">Lấy dữ liệu sản phẩm thất bại.</p>');
             }
         };
 
@@ -172,7 +174,7 @@ $(document).ready(function () {
                 const response = await fetch(`/api/products/${productId}`);
                 if (!response.ok) {
                     if (response.status === 404) {
-                        alert('Product not found for editing.');
+                        alert('Không tìm thấy sản phẩm để sửa.');
                         window.location.href = '/index.html'; // Redirect back to product list
                     } else {
                         throw new Error(`HTTP error! status: ${response.status}`);
@@ -187,8 +189,8 @@ $(document).ready(function () {
                 $('#content').val(product.content);
 
             } catch (error) {
-                console.error('Error loading product for edit:', error);
-                alert('Failed to load product details for editing.');
+                console.error('Lỗi lấy sản phẩm để sửa:', error);
+                alert('Lấy thông tin sản phẩm để sửa thất bại.');
                 window.location.href = '/index.html'; // Redirect back to product list on error
             }
         };
@@ -199,7 +201,7 @@ $(document).ready(function () {
             event.preventDefault();
             const accessToken = localStorage.getItem('accessToken');
             if (!accessToken) {
-                alert('You must be logged in to edit products.');
+                alert('Bạn phải đăng nhập để thực hiện tác vụ này.');
                 window.location.href = '/login.html'; // Redirect if not logged in
                 return;
             }
@@ -220,15 +222,15 @@ $(document).ready(function () {
                 });
 
                 if (response.ok) {
-                    alert('Product updated successfully!');
+                    alert('Sửa sản phẩm thành công!');
                     window.location.href = `/product-detail.html?id=${productIdToUpdate}`; // Redirect to detail page after edit
                 } else {
                     const errorData = await response.json();
-                    alert(`Failed to update product: ${errorData.message || 'Something went wrong'}`);
+                    alert(`Sửa sản phẩm thất bại: ${errorData.message || 'Có gì đó không đúng'}`);
                 }
             } catch (error) {
-                console.error('Update product error:', error);
-                alert('Failed to update product. Please try again.');
+                console.error('Lỗi sửa sản phẩm:', error);
+                alert('Sửa sản phẩm thất bại. Vui lòng thử lại');
             }
         });
 
@@ -238,11 +240,11 @@ $(document).ready(function () {
         });
     }
     
-    // Trang Login (login.html) - jQuery selector and .submit() for form handling
+    // Trang Login (login.html)
     if ($('#login-form').length) {
-        $('#login-form').submit(async function (event) { // jQuery's .submit() for form submission
+        $('#login-form').submit(async function (event) {
             event.preventDefault();
-            const email = $('#email').val(); // jQuery's .val() to get input value
+            const email = $('#email').val();
             const password = $('#password').val();
 
             try {
@@ -261,20 +263,20 @@ $(document).ready(function () {
                     window.location.href = '/index.html'; // Redirect to product page
                 } else {
                     const errorData = await response.json();
-                    alert(`Login failed: ${errorData.message || 'Invalid credentials'}`);
+                    alert(`Đăng nhập thất bại: ${errorData.message || 'Thông tin xác thực không hợp lệ'}`);
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                alert('Login failed. Please try again.');
+                console.error('Lỗi Đăng nhập:', error);
+                alert('Đăng nhập thất bại. Vui lòng thử lại.');
             }
         });
     }
 
-    // Trang Register (register.html) - jQuery selector and .submit() for form handling
+    // Trang Register (register.html)
     if ($('#register-form').length) {
-        $('#register-form').submit(async function (event) { // jQuery's .submit() for form submission
+        $('#register-form').submit(async function (event) {
             event.preventDefault();
-            const name = $('#name').val(); // jQuery's .val() to get input value
+            const name = $('#name').val();
             const email = $('#email').val();
             const password = $('#password').val();
 
@@ -288,33 +290,33 @@ $(document).ready(function () {
                 });
 
                 if (response.status === 201) {
-                    alert('Registration successful! Please login.');
+                    alert('Đăng ký thành công! Vui lòng đăng nhập.');
                     window.location.href = '/login.html'; // Redirect to login page
                 } else {
                     const errorData = await response.json();
-                    alert(`Registration failed: ${errorData.message || 'Something went wrong'}`);
+                    alert(`Đăng ký thất bại: ${errorData.message || 'Có gì đó không đúng'}`);
                 }
             } catch (error) {
                 console.error('Registration error:', error);
-                alert('Registration failed. Please try again.');
+                alert('Đăng ký thất bại. Vui lòng thử lại');
             }
         });
     }
 
-    // Trang Create Product (product-form.html) - jQuery selector and .submit() for form handling
+    // Trang Create Product (product-form.html)
     if ($('#create-product-form').length) {
         const $createProductForm = $('#create-product-form');
         const accessToken = localStorage.getItem('accessToken'); // Get access token
 
         if (!accessToken) {
-            alert('You must be logged in to create products.');
-            window.location.href = '/login.html'; // Redirect if not logged in
+            alert('Bạn phải đăng nhập để thực hiện tác vụ này.');
+            window.location.href = '/login.html';
             return;
         }
 
-        $createProductForm.submit(async function (event) { // jQuery's .submit() for form submission
+        $createProductForm.submit(async function (event) {
             event.preventDefault();
-            const title = $('#title').val(); // jQuery's .val() to get input value
+            const title = $('#title').val();
             const price = parseFloat($('#price').val());
             const content = $('#content').val();
 
@@ -329,25 +331,25 @@ $(document).ready(function () {
                 });
 
                 if (response.status === 201) {
-                    alert('Product created successfully!');
+                    alert('Tạo sản phẩm thành công!');
                     window.location.href = '/index.html'; // Redirect to product list
                 } else {
                     const errorData = await response.json();
-                    alert(`Failed to create product: ${errorData.message || 'Something went wrong'}`);
+                    alert(`Tạo sản phẩm thất bại: ${errorData.message || 'Có gì đó không đúng'}`);
                 }
             } catch (error) {
-                console.error('Create product error:', error);
-                alert('Failed to create product. Please try again.');
+                console.error('Lỗi tạo sản phẩm:', error);
+                alert('Tạo sản phẩm thất bại. Vui lòng thử lại.');
             }
         });
 
-        // Logout button on product-form.html (example) - jQuery selector and .on('click', ...)
+        // Logout button on product-form.html
         const $logoutButton = $('#logout-button');
         if ($logoutButton.length) {
             $logoutButton.on('click', function () {
                 localStorage.removeItem('accessToken');
-                alert('Logged out.');
-                window.location.href = '/index.html'; // Go back to product page (public)
+                alert('Đã đăng xuất.');
+                window.location.href = '/index.html';
             });
         }
     }

@@ -3,27 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Đăng nhập</title>
     <link rel="stylesheet" href="./css/output.css">
 </head>
 <body class="bg-gray-100">
+    <nav class="bg-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="font-bold text-xl">Fastify Backend CRUD</a>
+            <div id="navbar-links"> <!-- Container cho navbar links -->
+            </div>
+        </div>
+    </nav>
+
     <div class="container mx-auto mt-16 p-8 bg-white shadow-md rounded-md max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+        <h1 class="text-2xl font-bold mb-6 text-center">Đăng nhập hệ thống</h1>
         <form id="login-form" class="space-y-4">
             <div>
                 <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
                 <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Email">
             </div>
             <div>
-                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Mật khẩu</label>
                 <input type="password" id="password" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Password">
             </div>
             <div class="flex items-center justify-between">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Login
+                    Đăng nhập
                 </button>
                 <a href="/register.html" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                    Register
+                    Đăng ký
                 </a>
             </div>
         </form>
